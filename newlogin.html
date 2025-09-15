@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoSJE Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+        }
+
+        .left-section {
+            width: 50%;
+            background: #f5f5f5;
+            position: relative;
+        }
+
+        .right-section {
+            width: 50%;
+            background: #a098e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Header with logo */
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emblem {
+            width: 65px;
+            height: 65px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .emblem img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text .mosje {
+            font-size: 42px;
+            color: #a098e6;
+            font-weight: normal;
+            letter-spacing: 2px;
+            line-height: 0.9;
+        }
+
+        .logo-text .ministry {
+            font-size: 15px;
+            color: #a098e6;
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        .logo-text .hindi {
+            font-size: 11px;
+            color: #666;
+            margin-top: 1px;
+        }
+
+        /* Admin Login Button */
+        .admin-login-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: #a098e6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(160, 152, 230, 0.3);
+        }
+
+        .admin-login-btn:hover {
+            background: #8a7bd8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(160, 152, 230, 0.4);
+        }
+
+        /* Login Form - Centered */
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 18px;
+            border: 2px solid #d0d0d0;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background: #7a6bd4;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: #6a5bb8;
+        }
+
+        .login-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .register-link a {
+            color: #7a6bd4;
+            text-decoration: none;
+        }
+
+        /* Bottom elements */
+        .curved-shape {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            background: #a098e6;
+            border-radius: 0 100% 0 0;
+            opacity: 0.8;
+        }
+
+        .elder-helpline {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .elder-helpline .title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d5a2d;
+            margin-bottom: 2px;
+        }
+
+        .elder-helpline .subtitle {
+            font-size: 10px;
+            color: #2d5a2d;
+            margin-bottom: 2px;
+        }
+
+        .elder-helpline .number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5a2d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        /* Right side quote */
+        .quote-text {
+            font-size: 30px;
+            text-align: center;
+            line-height: 1.3;
+            padding: 50px;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        /* Admin Login Page Styles */
+        .admin-page {
+            display: none;
+        }
+
+        .admin-page.active {
+            display: flex;
+        }
+
+        .admin-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        .admin-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-title h2 {
+            color: #a098e6;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .admin-title p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .admin-login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+        }
+
+        .admin-form-group {
+            margin-bottom: 20px;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .admin-form-group input {
+            width: 100%;
+            padding: 10px 18px;
+            border: 2px solid #d0d0d0;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        .admin-login-button {
+            width: 100%;
+            padding: 10px;
+            background: #a098e6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .admin-login-button:hover {
+            background: #8a7bd8;
+        }
+
+        .admin-login-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .admin-info {
+            background: rgba(160, 152, 230, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .admin-info .info-title {
+            color: #a098e6;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .admin-info .info-text {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Loading and Error Messages */
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <!-- User Login Page -->
+    <div id="userLoginPage">
+        <div class="left-section">
+            <!-- Admin Login Button -->
+            <button class="admin-login-btn" onclick="showAdminLogin()">
+                🔒 Admin Login
+            </button>
+
+            <!-- Logo Header -->
+            <div class="header">
+                <div class="emblem">
+                    <img src="emblem.png" alt="National Emblem of India">
+                </div>
+                <div class="logo-text">
+                    <div class="mosje">MoSJE</div>
+                    <div class="ministry">Ministry of Social Justice & Empowerment</div>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="login-container">
+                <div class="message" id="userMessage"></div>
+                
+                <form id="userLoginForm">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    
+                    <button type="submit" class="login-button" id="loginBtn">Login</button>
+                </form>
+                
+                <div class="register-link">
+                    Don't have an account? <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <!-- Curved purple shape -->
+            <div class="curved-shape"></div>
+
+            <!-- Elder Line helpline -->
+            <div class="elder-helpline">
+                <div class="title">ELDER LINE</div>
+                <div class="subtitle">NATIONAL HELPLINE FOR SENIOR CITIZENS</div>
+                <div class="subtitle">Call Toll-Free</div>
+                <div class="number">📞 14567</div>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="quote-text">
+                "Cleanliness is not just a duty, it's a way of showing respect for our nation."
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Page -->
+    <div id="adminLoginPage" class="admin-page">
+        <div class="left-section">
+            <!-- Admin Header with Back Button -->
+            <div class="admin-header">
+                <div class="header">
+                    <div class="emblem">
+                        <img src="emblem.png" alt="National Emblem of India">
+                    </div>
+                    <div class="logo-text">
+                        <div class="mosje">MoSJE</div>
+                        <div class="ministry">Ministry of Social Justice & Empowerment</div>
+                    </div>
+                </div>
+                <button class="back-btn" onclick="showUserLogin()">
+                    ← Back to User Login
+                </button>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div class="admin-login-container">
+                <div class="admin-title">
+                    <h2>Admin Access</h2>
+                    <p>Authorized Personnel Only</p>
+                </div>
+
+                <div class="message" id="adminMessage"></div>
+
+                <form id="adminLoginForm">
+                    <div class="admin-form-group">
+                        <label>Admin Name:</label>
+                        <input type="text" id="adminId" placeholder="Enter your admin name" required>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label>Password:</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+                    </div>
+                    
+                    <button type="submit" class="admin-login-button" id="adminLoginBtn">Admin Login</button>
+                </form>
+                
+                <div class="admin-info">
+                    <div class="info-title">🛡 Secure Access</div>
+                    <div class="info-text">
+                        This is a restricted area for authorized administrators only. 
+                        All login attempts are monitored and logged for security purposes.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Curved purple shape -->
+            <div class="curved-shape"></div>
+
+            <!-- Elder Line helpline -->
+            <div class="elder-helpline">
+                <div class="title">ELDER LINE</div>
+                <div class="subtitle">NATIONAL HELPLINE FOR SENIOR CITIZENS</div>
+                <div class="subtitle">Call Toll-Free</div>
+                <div class="number">📞 14567</div>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="quote-text">
+                "Administration is about service to the people and transparency in governance."
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show/Hide Pages
+        function showAdminLogin() {
+            document.getElementById('userLoginPage').style.display = 'none';
+            document.getElementById('adminLoginPage').style.display = 'flex';
+        }
+
+        function showUserLogin() {
+            document.getElementById('adminLoginPage').style.display = 'none';
+            document.getElementById('userLoginPage').style.display = 'flex';
+        }
+
+        // Show messages
+        function showMessage(elementId, message, type) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // User Login Form
+        document.getElementById('userLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            showMessage('userMessage', 'Please wait...', 'loading');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    showMessage('userMessage', 'Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard after 1 second
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    showMessage('userMessage', data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('userMessage', 'Network error. Please check your connection.', 'error');
+            } finally {
+                // Reset button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        });
+
+        // Admin Login Form  
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const adminName = document.getElementById('adminId').value;
+            const password = document.getElementById('adminPassword').value;
+            const loginBtn = document.getElementById('adminLoginBtn');
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            showMessage('adminMessage', 'Verifying credentials...', 'loading');
+            
+            try {
+                const response = await fetch('/api/auth/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ adminName, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Save admin token
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('admin', JSON.stringify(data.admin));
+                    
+                    showMessage('adminMessage', 'Admin login successful! Redirecting...', 'success');
+                    
+                    // Redirect to admin dashboard after 1 second
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 1000);
+                } else {
+                    showMessage('adminMessage', data.message || 'Invalid credentials', 'error');
+                }
+            } catch (error) {
+                console.error('Admin login error:', error);
+                showMessage('adminMessage', 'Network error. Please check your connection.', 'error');
+            } finally {
+                // Reset button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Admin Login';
+            }
+        });
+
+        // Initialize - show user login page by default
+        document.addEventListener('DOMContentLoaded', function() {
+            showUserLogin();
+            
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            const adminToken = localStorage.getItem('adminToken');
+            
+            if (token) {
+                // Verify token is still valid
+                fetch('/api/complaints/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        // Token invalid, remove it
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                    }
+                })
+                .catch(error => {
+                    console.log('Token verification failed');
+                });
+            }
+            
+            if (adminToken) {
+                // Verify admin token
+                fetch('/api/admin/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/admin';
+                    } else {
+                        // Token invalid, remove it
+                        localStorage.removeItem('adminToken');
+                        localStorage.removeItem('admin');
+                    }
+                })
+                .catch(error => {
+                    console.log('Admin token verification failed');
+                });
+            }
+        });
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const activeForm = document.getElementById('userLoginPage').style.display !== 'none' 
+                    ? document.getElementById('userLoginForm') 
+                    : document.getElementById('adminLoginForm');
+                    
+                if (activeForm) {
+                    activeForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>

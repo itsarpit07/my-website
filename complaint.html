@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoSJE Trash Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #f0f0f5 0%, #e6e6f0 100%);
+            overflow: hidden;
+        }
+
+        .left-section {
+            width: 50%;
+            background: linear-gradient(135deg, #f0f0f5 0%, #e6e6f0 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 50px;
+        }
+
+        .right-section {
+            width: 50%;
+            background: linear-gradient(135deg, #8a7bd8 0%, #9b8ce6 50%, #a699ea 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 50px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* National Emblem - Top Left */
+        .emblem-header {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 10;
+        }
+
+        .emblem-header img {
+            width: 85px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Report Form */
+        .report-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .file-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-upload-btn {
+            background: #8a7bd8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-btn:hover {
+            background: #7a6bd4;
+            transform: translateY(-1px);
+        }
+
+        #fileInput {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: #666;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px 22px;
+            border: 2px solid #e0e0e8;
+            border-radius: 30px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(249, 249, 253, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: #8a7bd8;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 0 3px rgba(138, 123, 216, 0.1);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 22px;
+            border: 2px solid #e0e0e8;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(249, 249, 253, 0.8);
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .form-group textarea:focus {
+            border-color: #8a7bd8;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 0 3px rgba(138, 123, 216, 0.1);
+        }
+
+        .coordinates-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .coordinates-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .location-btn {
+            background: #8a7bd8;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(138, 123, 216, 0.3);
+        }
+
+        .location-btn:hover {
+            background: #7a6bd4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(138, 123, 216, 0.4);
+        }
+
+        .location-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8a7bd8 0%, #9b8ce6 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(138, 123, 216, 0.3);
+            margin-top: 25px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #7a6bd4 0%, #8b7ce0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(138, 123, 216, 0.4);
+        }
+
+        /* Right section content */
+        .right-content {
+            text-align: left;
+            z-index: 2;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .steps-section h3 {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .step {
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .step-number {
+            font-weight: 600;
+            color: white;
+        }
+
+        /* MoSJE Text - Bottom */
+        .mosje-bottom {
+            position: absolute;
+            bottom: 40px;
+            left: 50px;
+            z-index: 2;
+        }
+
+        .mosje-bottom .mosje-title {
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 200;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+
+        .mosje-bottom .ministry-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 300;
+        }
+
+        /* Background decoration */
+        .bg-decoration {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .bg-decoration2 {
+            position: absolute;
+            bottom: -80px;
+            left: 50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 15px;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- National Emblem -->
+    <!-- <div class="emblem-header">
+        <div style="width: 85px; height: 85px; background: #fefdfd; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+            EMBLEM
+        </div>
+    </div> -->
+    <div class="emblem-header">
+    <img src="emblem.png" alt="National Emblem of India" style="width: 85px; height: 85px; border-radius: 50%; background: #fefdfd; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); object-fit: contain;">
+</div>
+
+    <div class="left-section">
+        <div class="report-form">
+            <form id="trashReportForm">
+                <div class="form-group">
+                    <label>Upload photo :</label>
+                    <div class="file-upload-container">
+                        <button type="button" class="file-upload-btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                        <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+                        <span class="file-name" id="fileName"></span>
+                    </div>
+                    <img id="previewImage" class="preview-image" alt="Preview">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description :</label>
+                    <textarea id="description" placeholder="Describe the issue in detail" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Location :</label>
+                    <input type="text" id="location" placeholder="Enter the location" required>
+                </div>
+                
+                <div class="coordinates-row">
+                    <div class="form-group">
+                        <label>Latitude :</label>
+                        <input type="text" id="latitude" placeholder="Auto-filled" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude :</label>
+                        <input type="text" id="longitude" placeholder="Auto-filled" readonly>
+                    </div>
+                </div>
+                
+                <button type="button" class="location-btn" onclick="getLocation()">Get my location</button>
+                
+                <div class="success-message" id="successMessage"></div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="right-section">
+        <div class="bg-decoration"></div>
+        <div class="bg-decoration2"></div>
+        
+        <div class="right-content">
+            <h1 class="main-title">Report Trash & Blocked Drains</h1>
+            <p class="subtitle">— Help Get Them Fixed Fast</p>
+            
+            <div class="steps-section">
+                <h3>How it works — 3 easy steps</h3>
+                <div class="step">
+                    <span class="step-number">1.</span> <strong>Take a photo</strong> — Capture the litter, garbage heap, or blocked drain.
+                </div>
+                <div class="step">
+                    <span class="step-number">2.</span> <strong>Add the location</strong> — Use your phone's GPS or drop a pin on the map.
+                </div>
+                <div class="step">
+                    <span class="step-number">3.</span> <strong>Upload & notify</strong> — Submit the report, we forward it to the responsible municipality team
+                </div>
+            </div>
+        </div>
+
+        <!-- MoSJE Text at Bottom -->
+        <div class="mosje-bottom">
+            <div class="mosje-title">MoSJE</div>
+            <div class="ministry-text">Ministry of Social Justice & Empowerment</div>
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileName = document.getElementById('fileName');
+            const preview = document.getElementById('previewImage');
+            
+            if (file) {
+                fileName.textContent = file.name;
+                
+                // Show preview if it's an image
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function getLocation() {
+            const btn = document.querySelector('.location-btn');
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            
+            btn.disabled = true;
+            btn.textContent = 'Getting location...';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        latInput.value = position.coords.latitude.toFixed(6);
+                        lngInput.value = position.coords.longitude.toFixed(6);
+                        btn.disabled = false;
+                        btn.textContent = 'Location Found ✓';
+                        btn.style.background = '#4CAF50';
+                        
+                        setTimeout(() => {
+                            btn.textContent = 'Get my location';
+                            btn.style.background = '#8a7bd8';
+                        }, 2000);
+                    },
+                    function(error) {
+                        btn.disabled = false;
+                        btn.textContent = 'Location Error';
+                        btn.style.background = '#f44336';
+                        console.error('Location error:', error);
+                        
+                        setTimeout(() => {
+                            btn.textContent = 'Get my location';
+                            btn.style.background = '#8a7bd8';
+                        }, 2000);
+                    }
+                );
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Location not supported';
+                btn.style.background = '#f44336';
+            }
+        }
+
+        document.getElementById('trashReportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const description = document.getElementById('description').value;
+            const location = document.getElementById('location').value;
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const successMessage = document.getElementById('successMessage');
+            
+            if (!description || !location) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (!fileInput.files[0]) {
+                alert('Please upload a photo');
+                return;
+            }
+            
+            // Simulate form submission
+            successMessage.style.display = 'block';
+            successMessage.textContent = 'Report submitted successfully! Track ID: TR' + Math.floor(Math.random() * 100000);
+            
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                this.reset();
+                document.getElementById('fileName').textContent = '';
+                document.getElementById('previewImage').style.display = 'none';
+                successMessage.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
